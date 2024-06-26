@@ -66,6 +66,50 @@
 6. Ứng dụng sẽ hiển thị thông tin người dùng của bạn
 7. Để đăng xuất, nhấp vào nút "Logout"
 
+
+
+## Logic hoạt động của ứng dụng
+
+Ứng dụng này sử dụng quy trình OAuth 2.0 để xác thực người dùng thông qua Lark. Dưới đây là flow hoạt động chi tiết:
+
+1. **Khởi động ứng dụng**
+   - Khi ứng dụng khởi động, nó kiểm tra xem người dùng đã đăng nhập chưa bằng cách kiểm tra `user_info` trong `st.session_state`.
+
+2. **Hiển thị nút đăng nhập**
+   - Nếu người dùng chưa đăng nhập, ứng dụng hiển thị nút "Login with Lark".
+
+3. **Bắt đầu quá trình xác thực**
+   - Khi người dùng nhấp vào nút đăng nhập, họ được chuyển hướng đến trang xác thực của Lark.
+   - URL chuyển hướng chứa `APP_ID` và `REDIRECT_URI` để Lark có thể xác định ứng dụng và nơi gửi lại kết quả.
+
+4. **Xác thực trên Lark**
+   - Người dùng đăng nhập vào tài khoản Lark của họ.
+   - Lark yêu cầu người dùng cấp quyền cho ứng dụng.
+
+5. **Chuyển hướng trở lại ứng dụng**
+   - Sau khi xác thực thành công, Lark chuyển hướng người dùng trở lại ứng dụng với một mã xác thực (authorization code) trong query parameters.
+
+6. **Trao đổi mã xác thực lấy token**
+   - Ứng dụng phát hiện mã xác thực trong URL và sử dụng nó để gọi API của Lark, trao đổi mã này lấy access token.
+   - API call này cũng bao gồm `APP_ID` và `APP_SECRET` để xác thực ứng dụng với Lark.
+
+7. **Lưu trữ thông tin người dùng**
+   - Sau khi nhận được access token, ứng dụng sử dụng nó để lấy thông tin chi tiết của người dùng từ Lark.
+   - Thông tin này được lưu trong `st.session_state.user_info`.
+
+8. **Hiển thị thông tin người dùng**
+   - Ứng dụng hiển thị thông tin người dùng đã lấy được, bao gồm tên, email, ảnh đại diện, v.v.
+
+9. **Xử lý đăng xuất**
+   - Khi người dùng nhấp vào nút "Logout", `st.session_state` được xóa, đưa ứng dụng về trạng thái ban đầu.
+
+10. **Bảo mật**
+    - Ứng dụng sử dụng biến môi trường để lưu trữ thông tin nhạy cảm như `APP_ID` và `APP_SECRET`.
+    - Access token được lưu trong session state và không được lưu trữ lâu dài.
+
+Flow này đảm bảo rằng thông tin xác thực của người dùng được xử lý an toàn, và ứng dụng chỉ có quyền truy cập hạn chế vào tài khoản Lark của người dùng theo sự cho phép của họ.
+
+
 ## Cấu trúc dự án
 
 - `main.py`: File chính chứa mã nguồn của ứng dụng Streamlit

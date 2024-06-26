@@ -37,7 +37,8 @@ def exchange_code_for_token(code):
 
 def main():
     st.title("Lark Login Example")
-
+    # Hiển thị GIF demo
+    st.image("20240627000740_rec_.gif", caption="Demo ứng dụng đăng nhập Lark")
     # Xử lý đăng xuất
     if st.session_state.get('logout'):
         st.session_state.clear()
